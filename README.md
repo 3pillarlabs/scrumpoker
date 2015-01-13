@@ -1,4 +1,4 @@
-scrumpoker
+Welcome to Scrum Poker
 ==========
 
-ITSUPPORT-9960
+For now, please see [the Wiki](./wiki) for more info.
