@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block styles%}
+    <link rel="stylesheet" href="/static/css/room.css" />
+{% endblock %}
+
+{% block scripts%}
+    <script src="/static/js/table.js" type="text/javascript"></script>
+{% endblock %}
+
+{% block content %}
+    <div id="room">
+        <div id="table">
+
+            <div class="player">
+                <div class="cardHolder">
+                    <div class="card">
+                        <div class="front">
+                            <div class="topRight">22</div>
+                            <div class="center">22</div>
+                            <div class="bottomLeft">22</div>
+                        </div>
+                        <div class="back">
+                        </div>
+                    </div>
+                </div>
+                <div class="playerName">
+                    Adi
+                </div>
+            </div>
+
+            <div class="player">
+                <div class="cardHolder">
+                    <div class="card">
+                        <div class="front">
+                            <div class="topRight">22</div>
+                            <div class="center">22</div>
+                            <div class="bottomLeft">22</div>
+                        </div>
+                        <div class="back">
+                        </div>
+                    </div>
+                </div>
+                <div class="playerName">
+                    Ion
+                </div>
+            </div>
+
+            <div class="player">
+                <div class="cardHolder">
+                    <div class="card hidden">
+                        <div class="front">
+                            <div class="topRight">22</div>
+                            <div class="center">22</div>
+                            <div class="bottomLeft">22</div>
+                        </div>
+                        <div class="back">
+                        </div>
+                    </div>
+                </div>
+                <div class="playerName">
+                    Tavi
+                </div>
+            </div>
+
+        </div>
+
+        <div id="hand">
+
+            <div class="card">
+                <div class="front">
+                    <div class="topRight">0</div>
+                    <div class="center">0</div>
+                    <div class="bottomLeft">0</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="front">
+                    <div class="topRight">1/2</div>
+                    <div class="center">1/2</div>
+                    <div class="bottomLeft">1/2</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="front">
+                    <div class="topRight">1</div>
+                    <div class="center">1</div>
+                    <div class="bottomLeft">1</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="front">
+                    <div class="topRight">2</div>
+                    <div class="center">2</div>
+                    <div class="bottomLeft">2</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="front">
+                    <div class="topRight">3</div>
+                    <div class="center">3</div>
+                    <div class="bottomLeft">3</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="front">
+                    <div class="topRight">5</div>
+                    <div class="center">5</div>
+                    <div class="bottomLeft">5</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="front">
+                    <div class="topRight">8</div>
+                    <div class="center">8</div>
+                    <div class="bottomLeft">8</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="front">
+                    <div class="topRight">13</div>
+                    <div class="center">13</div>
+                    <div class="bottomLeft">13</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="front">
+                    <div class="topRight">20</div>
+                    <div class="center">20</div>
+                    <div class="bottomLeft">20</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="front">
+                    <div class="topRight">40</div>
+                    <div class="center">40</div>
+                    <div class="bottomLeft">40</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="front">
+                    <div class="topRight">100</div>
+                    <div class="center">100</div>
+                    <div class="bottomLeft">100</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="front">
+                    <div class="topRight">?</div>
+                    <div class="center">?</div>
+                    <div class="bottomLeft">?</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="front">
+                    <div class="topRight"><i class="fa fa-coffee"></i></div>
+                    <div class="center"><i class="fa fa-coffee"></i></div>
+                    <div class="bottomLeft"><i class="fa fa-coffee"></i></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="modal fade" id="nameModal">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span>&times;</span></button>
+                        <h4 class="modal-title">Enter your name</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Your name">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Continue</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
