@@ -1,15 +1,15 @@
-var io = require('socket.io');
+var io;
 var connectionCallbacks = [];
 var socket;
 
 module.exports = {
     listen: function (server) {
-        io.listen(server);
+        io = require('socket.io').listen(server);
 
         io.on("connection", function (_socket) {
             for (var f = 0; f < connectionCallbacks.length; f++)
             {
-                connectionCallbacks[f].call(_socket);
+                connectionCallbacks[f].call(this, _socket);
             }
 
             socket = _socket;

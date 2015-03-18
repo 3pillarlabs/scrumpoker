@@ -11,7 +11,7 @@ router.get('/hello', function(req, res) {
 plug.onConnection(function (socket) {
     socket.on("send", function (data) {
       console.log(data);
-    })    
+  });    
 })
 
 module.exports = router;
