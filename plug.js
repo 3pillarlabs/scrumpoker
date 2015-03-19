@@ -3,6 +3,7 @@ var connectionCallbacks = [];
 var socket;
 
 module.exports = {
+
     listen: function (server) {
         io = require('socket.io').listen(server);
 
@@ -24,12 +25,12 @@ module.exports = {
             }
             else
             {
-                callback.call(socket);
+                callback.call(this, socket);
             }
         }
         else
         {
-            console.error("Plug's onConnection must be a function, got", typeof callback);
+            console.error("Plug's whenPlugged must be a function, got", typeof callback);
         }
     }
 }
