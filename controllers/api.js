@@ -8,10 +8,10 @@ router.get('/hello', function(req, res) {
     res.send({ who: 'world' });
 });
 
-plug.onConnection(function (socket) {
+plug.whenPlugged(function (socket) {
     socket.on("send", function (data) {
       console.log(data);
-  });    
+  });
 })
 
 module.exports = router;

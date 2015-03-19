@@ -15,7 +15,7 @@ module.exports = {
             socket = _socket;
         });
     },
-    onConnection: function (callback) {
+    whenPlugged: function (callback) {
         if (typeof callback === 'function')
         {
             if (!socket)
