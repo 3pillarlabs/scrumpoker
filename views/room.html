@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
-{% block styles%}
+{% block styles %}
   <link rel="stylesheet" href="/static/css/room.css" />
 {% endblock %}
 
-{% block scripts%}
-  <script src="/static/js/table.js" type="text/javascript"></script>
+{% block scripts %}
+  <script src="/static/js/room.js" type="text/javascript"></script>
 {% endblock %}
 
 {% block content %}
@@ -172,19 +172,25 @@
     <div class="modal fade" id="nameModal">
       <div class="modal-dialog modal-sm">
         <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">
-              <span>&times;</span></button>
-            <h4 class="modal-title">Enter your name</h4>
-          </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <input type="text" class="form-control" placeholder="Your name">
+          <form id="joinRoomForm" action="#" method="post">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">
+                <span>&times;</span></button>
+              <h4 class="modal-title">Enter your name</h4>
             </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Continue</button>
-          </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <input id="name"
+                       required
+                       type="text"
+                       class="form-control"
+                       placeholder="Your name" />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary" id="joinRoomBtn">Continue</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
