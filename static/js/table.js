@@ -1,15 +1,14 @@
 function adjustTableHeight(){
-    $("#table").height($(window).height() - $("#hand").height() - 72);
+  $("#table").height($(window).height() - $("#hand").height() - 72);
 }
 
 $(document).ready(function(){
+  $('#nameModal').modal();
 
-    $('#nameModal').modal();
-    
-    $(window).resize(adjustTableHeight);
-    adjustTableHeight();
+  $(window).resize(adjustTableHeight);
+  adjustTableHeight();
 
-    $("#table .card").click(function(){
-        $(this).toggleClass("turned")
-    })
+  $("#table .card").click(function(){
+    $(this).toggleClass("turned")
+  })
 });
