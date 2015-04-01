@@ -13,6 +13,7 @@
     "morgan": "~1.3.2",
     "nunjucks": "*",
     "serve-favicon": "~2.1.3",
-    "socket.io": "^1.3.4"
+    "socket.io": "^1.3.4",
+    "underscore": "^1.8.2"
   }
 }
