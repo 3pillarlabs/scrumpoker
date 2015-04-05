@@ -38,5 +38,5 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask("default", ["express", "watch"]);
+  grunt.registerTask("start", ["express", "watch"]);
 };

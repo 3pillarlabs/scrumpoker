@@ -13,10 +13,6 @@
   // create the modal
   $('#nameModal').modal({backdrop: 'static'});
 
-  $("#table .card").click(function(){
-    $(this).toggleClass("turned")
-  });
-
   // handle join modal submission
   $("#joinRoomForm").submit(function () {
     var name = $("#joinRoomForm #name").val();
@@ -28,7 +24,18 @@
       if (!roomId) {
         window.location = "#/view/" + room.id;
       }
-      console.log(room);
+
+      var tableEl = $("#table");
+
+      for (var f = 0 ; f < room.users.length; f++) {
+        var user = room.users[f];
+        user.cardValue = 1;
+        tableEl.append(nj.render("player.html", user))
+      }
+
+      $("#table .card").click(function(){
+        $(this).toggleClass("turned")
+      });
     });
 
     socket.emit("joinRoom", {roomId: roomId, name: name});
