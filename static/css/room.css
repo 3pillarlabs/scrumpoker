@@ -1,120 +1,120 @@
 .card
 {
-    width: 73px;
-    height: 100px;
-    border-radius: 5px;
-    overflow: hidden;
-    cursor: default;
+  width: 73px;
+  height: 100px;
+  border-radius: 5px;
+  overflow: hidden;
+  cursor: default;
 }
 
-    .card .front
+  .card .front
+  {
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: white;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    text-align: center;
+    color: black;
+  }
+
+    .card .front .topRight
     {
-        border: 1px solid black;
-        border-radius: 5px;
-        background-color: white;
-        width: 100%;
-        height: 100%;
-        position: relative;
-        text-align: center;
-        color: black;
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      font-size: 14px;
+      line-height: 14px;
     }
 
-        .card .front .topRight
-        {
-            position: absolute;
-            top: 3px;
-            right: 3px;
-            font-size: 14px;
-            line-height: 14px;
-        }
-
-        .card .front .bottomLeft
-        {
-            position: absolute;
-            bottom: 3px;
-            left: 3px;
-            font-size: 14px;
-            line-height: 14px;
-        }
-
-        .card .front .center
-        {
-            font-size: 32px;
-            margin-top: 25px;
-        }
-
-    .card .back
+    .card .front .bottomLeft
     {
-        width: 100%;
-        height: 100%;
-        background: url("../img/card_back.png") no-repeat left top;
+      position: absolute;
+      bottom: 3px;
+      left: 3px;
+      font-size: 14px;
+      line-height: 14px;
     }
+
+    .card .front .center
+    {
+      font-size: 32px;
+      margin-top: 25px;
+    }
+
+  .card .back
+  {
+    width: 100%;
+    height: 100%;
+    background: url("../img/card_back.png") no-repeat left top;
+  }
 
 #table
 {
-    background: #216f1d;
-    background: -moz-linear-gradient(top, #046337 0%, #183B25 100%);
-    background: -webkit-linear-gradient(top, #046337 0%,#183B25 100%);
-    background: -o-linear-gradient(top, #046337 0%,#183B25 100%);
-    background: -ms-linear-gradient(top, #046337 0%,#183B25 100%);
-    background: linear-gradient(to bottom, #046337 0%,#183B25 100%);
+  background: #216f1d;
+  background: -moz-linear-gradient(top, #046337 0%, #183B25 100%);
+  background: -webkit-linear-gradient(top, #046337 0%,#183B25 100%);
+  background: -o-linear-gradient(top, #046337 0%,#183B25 100%);
+  background: -ms-linear-gradient(top, #046337 0%,#183B25 100%);
+  background: linear-gradient(to bottom, #046337 0%,#183B25 100%);
 
-    color: #D7FFF5;
+  color: #D7FFF5;
 }
 
 #table::after
 {
-    content: " ";
-    clear: both;
-    display: block;
+  content: " ";
+  clear: both;
+  display: block;
 }
 
-    #table .player
+  #table .player
+  {
+    float: left;
+    margin: 10px;
+    text-align: center;
+  }
+
+    .player .cardHolder
     {
-        float: left;
-        margin: 10px;
-        text-align: center;
+      border: 2px solid #D7FFF5;
+      border-radius: 5px;
+      width: 75px;
+      height: 102px;
     }
 
-        .player .cardHolder
+      .cardHolder .card
+      {
+        margin-left: -1px;
+        margin-top: -1px;
+      }
+
+        .cardHolder .card .front
         {
-            border: 2px solid #D7FFF5;
-            border-radius: 5px;
-            width: 75px;
-            height: 102px;
+          display: none;
         }
 
-            .cardHolder .card
-            {
-                margin-left: -1px;
-                margin-top: -1px;
-            }
-
-                .cardHolder .card .front
-                {
-                    display: none;
-                }
-
-                .cardHolder .card.turned .front
-                {
-                    display: block;
-                }
+        .cardHolder .card.turned .front
+        {
+          display: block;
+        }
 
 #hand
 {
-    margin-top: 10px;
+  margin-top: 10px;
 }
 
 #hand::after
 {
-    content: " ";
-    clear: both;
-    display: block;
+  content: " ";
+  clear: both;
+  display: block;
 }
 
-    #hand .card
-    {
-        margin: 10px;
-        float: left;
-        cursor: pointer;
-    }
+  #hand .card
+  {
+    margin: 10px;
+    float: left;
+    cursor: pointer;
+  }

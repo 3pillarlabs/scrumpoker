@@ -1,5 +1,6 @@
-$(document).ready(function () {
-  var socket = io.connect('http://localhost:3000');
+(function () {
+  'use strict';
 
-  socket.emit('send', { message: "Tada!!!" });
-});
+  window.nj = nunjucks;
+  nj.configure("/static/views", { autoescape: true });
+})();

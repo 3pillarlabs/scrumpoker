@@ -1,5 +1,6 @@
+.grunt/
 .idea/
-node_modules/
+node_modules
 *.*~
 .DS_Store
 .DS_Store?
@@ -8,3 +9,5 @@ node_modules/
 .Trashes
 ehthumbs.db
 Thumbs.db
+/*.log
+/.Trash-1000/

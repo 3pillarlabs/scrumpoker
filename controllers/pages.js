@@ -6,7 +6,7 @@ router.get('/', function(req, res) {
 });
 
 router.get('/room', function(req, res) {
-    res.render('room.html');
+  res.render('room.html');
 });
 
 
