@@ -41,7 +41,6 @@ plug.whenPlugged(function (socket) {
 
       if (!room) {
         room =  new Room(data.roomId);
-        return;
       }
     }
     else {
@@ -61,16 +60,17 @@ plug.whenPlugged(function (socket) {
 
     socket.emit("roomJoined", {
       room: room
-    })
+    });
   });
 
   socket.on("disconnect", function (data) {
     if (socket.pokerInfo) {
       var user = socket.pokerInfo.user;
 
+      //TODO: make this custome nto to itterate over the full list
       socket.pokerInfo.room.users = _.filter(socket.pokerInfo.room.users, function (item) {
         return item !== user;
-      });      
+      });
     }
   });
 
