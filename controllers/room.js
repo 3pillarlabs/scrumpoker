@@ -59,9 +59,7 @@ plug.whenPlugged(function (socket) {
       user: user
     };
 
-    socket.emit("roomJoined", {
-      room: room
-    });
+    socket.emit("roomJoined", room);
 
     socket.broadcast.to(room.id).emit('userJoined', user);
   });

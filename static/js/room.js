@@ -3,8 +3,6 @@
 
   var socket = io();
   var room, roomId;
-  var playingTable = $("#table");
-  var users = [];
 
   // attempt to extract room id from URL hash
   var hashMatch = window.location.hash.match(/^#\/view\/(\d+)$/);
@@ -12,36 +10,42 @@
     roomId = hashMatch[1];
   }
 
-  function addUser(userJoining) {
-    userJoining.playerDOM = $(nj.render("player.html", userJoining));
-    users.push(userJoining)
-    playingTable.append(userJoining.playerDOM);
+  function Room(roomInfo) {
+    this.users = [];
+    this.playingTable =  $("#table");
   }
 
-  function removeUser(userLeaving) {
-    var user = _.find(users, function (user) {
-      return user.id == userLeaving.id;
-    });
+  Room.prototype = {
+    addUser: function (userJoiningInfo) {
+      var user = new User(userJoiningInfo);
+      this.users.push(user)
+      this.playingTable.append(user.getDOM());
+    },
 
-    user.playerDOM.remove();
+    removeUser: function (userLeavingInfo) {
+      var user = _.find(this.users, function (user, index) {
+        console.log("Found at index:", index);
+        return user.id == userLeavingInfo.id;
+      });
+
+      user.getDOM().remove();
+    }
   }
-
 
   function handleJoinRoom(roomInfo) {
-    room = roomInfo.room;
+    room = new Room(roomInfo);
     $('#nameModal').modal('hide');
 
     if (!roomId) {
-      window.location = "#/view/" + room.id;
+      window.location = "#/view/" + roomInfo.id;
     }
 
-    for (var f = 0 ; f < room.users.length; f++) {
-      var user = room.users[f];
-      addUser(user);
+    for (var f = 0 ; f < roomInfo.users.length; f++) {
+      room.addUser(roomInfo.users[f]);
     }
 
-    socket.on("userJoined", addUser);
-    socket.on("userLeft", removeUser);
+    socket.on("userJoined", $.proxy(room.addUser, room));
+    socket.on("userLeft", $.proxy(room.removeUser, room));
   }
 
   // create the modal
