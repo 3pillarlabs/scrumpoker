@@ -10,6 +10,50 @@
     roomId = hashMatch[1];
   }
 
+  function Room(roomInfo) {
+    this.users = [];
+    this.playingTable =  $("#table");
+  }
+
+  Room.prototype = {
+    addUser: function (userJoiningInfo) {
+      var user = new User(userJoiningInfo);
+      this.users.push(user)
+      this.playingTable.append(user.getDOM());
+    },
+
+    removeUser: function (userLeavingInfo) {
+      var user = _.find(this.users, function (user, index) {
+        userIndex = index;
+        return user.id == userLeavingInfo.id;
+      });
+
+      if (user) {
+        user.getDOM().remove();
+        this.users.splice(userIndex, 1);
+      }
+      else {
+        // bitch about it
+      }
+    }
+  }
+
+  function handleJoinRoom(roomInfo) {
+    room = new Room(roomInfo);
+    $('#nameModal').modal('hide');
+
+    if (!roomId) {
+      window.location = "#/view/" + roomInfo.id;
+    }
+
+    for (var f = 0 ; f < roomInfo.users.length; f++) {
+      room.addUser(roomInfo.users[f]);
+    }
+
+    socket.on("userJoined", $.proxy(room.addUser, room));
+    socket.on("userLeft", $.proxy(room.removeUser, room));
+  }
+
   // create the modal
   $('#nameModal').modal({backdrop: 'static'});
 
@@ -17,26 +61,7 @@
   $("#joinRoomForm").submit(function () {
     var name = $("#joinRoomForm #name").val();
 
-    socket.on("roomJoined", function (data) {
-      room = data.room;
-      $('#nameModal').modal('hide');
-
-      if (!roomId) {
-        window.location = "#/view/" + room.id;
-      }
-
-      var tableEl = $("#table");
-
-      for (var f = 0 ; f < room.users.length; f++) {
-        var user = room.users[f];
-        user.cardValue = 1;
-        tableEl.append(nj.render("player.html", user))
-      }
-
-      $("#table .card").click(function(){
-        $(this).toggleClass("turned")
-      });
-    });
+    socket.on("roomJoined", handleJoinRoom);
 
     socket.emit("joinRoom", {roomId: roomId, name: name});
 

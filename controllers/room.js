@@ -23,8 +23,9 @@ Room.prototype = {
   }
 }
 
-function User(name) {
+function User(name, id) {
   this.name = name;
+  this.id = id;
 }
 
 plug.whenPlugged(function (socket) {
@@ -50,7 +51,7 @@ plug.whenPlugged(function (socket) {
     rooms.push(room);
     socket.join(room.id);
 
-    var user = new User(data.name);
+    var user = new User(data.name, room.users.length);
     room.users.push(user);
 
     socket.pokerInfo = {
@@ -58,19 +59,22 @@ plug.whenPlugged(function (socket) {
       user: user
     };
 
-    socket.emit("roomJoined", {
-      room: room
-    });
+    socket.emit("roomJoined", room);
+
+    socket.broadcast.to(room.id).emit('userJoined', user);
   });
 
   socket.on("disconnect", function (data) {
     if (socket.pokerInfo) {
       var user = socket.pokerInfo.user;
+      var room = socket.pokerInfo.room;
 
-      //TODO: make this custome nto to itterate over the full list
-      socket.pokerInfo.room.users = _.filter(socket.pokerInfo.room.users, function (item) {
+      //TODO: make this more efficient
+      room.users = _.filter(room.users, function (item) {
         return item !== user;
       });
+
+      socket.broadcast.to(room.id).emit('userLeft', user);
     }
   });
 
