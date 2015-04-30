@@ -24,11 +24,17 @@
 
     removeUser: function (userLeavingInfo) {
       var user = _.find(this.users, function (user, index) {
-        console.log("Found at index:", index);
+        userIndex = index;
         return user.id == userLeavingInfo.id;
       });
 
-      user.getDOM().remove();
+      if (user) {
+        user.getDOM().remove();
+        this.users.splice(userIndex, 1);
+      }
+      else {
+        // bitch about it
+      }
     }
   }
 
