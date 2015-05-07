@@ -1,18 +1,24 @@
+var socket = io();
+var room;
+
 (function () {
   'use strict';
 
-  var socket = io();
-  var room, roomId;
+  var URLRoomId;
+  var playerName;
 
-  // attempt to extract room id from URL hash
-  var hashMatch = window.location.hash.match(/^#\/view\/(\d+)$/);
-  if (hashMatch) {
-    roomId = hashMatch[1];
-  }
-
-  function Room(roomInfo) {
+  function Room(roomInfo, playerInfo) {
+    this.cardSequence = [
+      "0", "1/2", "1", "2", "3", "5", "8", "13", "20", "40", "100", "?", "coffee"
+    ];
     this.users = [];
+
+    this.hand = $("#hand");
     this.playingTable =  $("#table");
+
+    this.currentPlayer = new User(playerInfo);
+    this.currentPlayer.isCurrentPlayer = true;
+    this.renderHand();
   }
 
   Room.prototype = {
@@ -35,14 +41,27 @@
       else {
         // bitch about it
       }
+    },
+
+    renderHand: function () {
+      for (var f = 0; f < this.cardSequence.length; f++) {
+        var card = $(nj.render("card.html", {cardValue: this.cardSequence[f]}));
+        card.data("value", this.cardSequence[f]);
+        this.hand.append(card);
+      }
+      adjustTableHeight();
+
+      $(document).on("click", "#hand .card", this.currentPlayer.castVote);
     }
   }
 
-  function handleJoinRoom(roomInfo) {
-    room = new Room(roomInfo);
+  function handleJoinRoom(data) {
+    var roomInfo = data.room;
+    room = new Room(roomInfo, data.user);
+
     $('#nameModal').modal('hide');
 
-    if (!roomId) {
+    if (!URLRoomId) {
       window.location = "#/view/" + roomInfo.id;
     }
 
@@ -54,26 +73,35 @@
     socket.on("userLeft", $.proxy(room.removeUser, room));
   }
 
-  // create the modal
-  $('#nameModal').modal({backdrop: 'static'});
-
-  // handle join modal submission
-  $("#joinRoomForm").submit(function () {
-    var name = $("#joinRoomForm #name").val();
-
-    socket.on("roomJoined", handleJoinRoom);
-
-    socket.emit("joinRoom", {roomId: roomId, name: name});
-
-    return false;
-  });
-
-
   function adjustTableHeight(){
     $("#table").height($(window).height() - $("#hand").height() - 72);
   }
-  $(window).resize(adjustTableHeight);
-  adjustTableHeight();
 
+  (function init(argument) {
+
+    // attempt to extract room id from URL hash
+    var match = window.location.hash.match(/^#\/view\/(\d+)$/);
+    if (match) {
+      URLRoomId = match[1];
+    }
+
+    // create the modal
+    // $('#nameModal').modal({backdrop: 'static'});
+
+    // handle join modal submission
+    // $("#joinRoomForm").submit(function () {
+      // playerName = $("#joinRoomForm #name").val();
+      playerName = "Nicu";
+
+      socket.on("roomJoined", handleJoinRoom);
+
+      socket.emit("joinRoom", {roomId: URLRoomId, name: playerName});
+
+    //   return false;
+    // });
+
+    $(window).resize(adjustTableHeight);
+    adjustTableHeight();
+  })();
 
 })();

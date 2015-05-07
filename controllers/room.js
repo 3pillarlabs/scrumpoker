@@ -59,9 +59,18 @@ plug.whenPlugged(function (socket) {
       user: user
     };
 
-    socket.emit("roomJoined", room);
+    socket.emit("roomJoined", {
+      room: room,
+      user: user
+    });
 
     socket.broadcast.to(room.id).emit('userJoined', user);
+  });
+
+  socket.on("vote", function (data) {
+    var voter = socket.pokerInfo.user;
+    var voteValue = data.voteValue;
+    console.log("Received vote:",voter, voteValue);
   });
 
   socket.on("disconnect", function (data) {

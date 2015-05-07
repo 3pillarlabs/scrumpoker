@@ -1,4 +1,7 @@
-<div class="card hidden">
+<div class="card {{state}}">
+  {% if cardValue == "coffee" %}
+    {% set cardValue = "<i class='fa fa-coffee'></i>" %}
+  {% endif %}
   <div class="front">
     <div class="topRight">{{cardValue}}</div>
     <div class="center">{{cardValue}}</div>
