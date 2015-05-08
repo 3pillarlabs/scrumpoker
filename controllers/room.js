@@ -68,8 +68,12 @@ plug.whenPlugged(function (socket) {
   });
 
   socket.on("vote", function (data) {
+    var room = socket.pokerInfo.room;
     var voter = socket.pokerInfo.user;
     var voteValue = data.voteValue;
+
+    socket.broadcast.to(room.id).emit('userVoted', voter);
+
     console.log("Received vote:",voter, voteValue);
   });
 

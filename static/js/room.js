@@ -7,7 +7,7 @@ var room;
   var URLRoomId;
   var playerName;
 
-  function Room(roomInfo, playerInfo) {
+  function Room() {
     this.cardSequence = [
       "0", "1/2", "1", "2", "3", "5", "8", "13", "20", "40", "100", "?", "coffee"
     ];
@@ -16,9 +16,10 @@ var room;
     this.hand = $("#hand");
     this.playingTable =  $("#table");
 
-    this.currentPlayer = new User(playerInfo);
-    this.currentPlayer.isCurrentPlayer = true;
-    this.renderHand();
+    $(window).resize($.proxy(this.adjustTableHeight, this));
+    this.adjustTableHeight();
+
+    this.currentPlayer = null;
   }
 
   Room.prototype = {
@@ -29,6 +30,7 @@ var room;
     },
 
     removeUser: function (userLeavingInfo) {
+      var userIndex;
       var user = _.find(this.users, function (user, index) {
         userIndex = index;
         return user.id == userLeavingInfo.id;
@@ -49,35 +51,51 @@ var room;
         card.data("value", this.cardSequence[f]);
         this.hand.append(card);
       }
-      adjustTableHeight();
+
+      this.adjustTableHeight();
 
       $(document).on("click", "#hand .card", this.currentPlayer.castVote);
+    },
+
+    handleUserVote: function (voter) {
+      var votingUser = _.find(this.users, function (user) {
+        return user.id === voter.id;
+      });
+
+      votingUser.getDOM().find(".card").removeClass("hidden");
+    },
+
+    join: function (data) {
+
+      this.currentPlayer = new User(data.user);
+      this.currentPlayer.isCurrentPlayer = true;
+      this.renderHand();
+
+      var roomInfo = data.room;
+
+      $('#nameModal').modal('hide');
+
+      if (!URLRoomId) {
+        window.location = "#/view/" + roomInfo.id;
+      }
+
+      for (var f = 0 ; f < roomInfo.users.length; f++) {
+        this.addUser(roomInfo.users[f]);
+      }
+
+      socket.on("userJoined", $.proxy(this.addUser, this));
+      socket.on("userLeft", $.proxy(this.removeUser, this));
+      socket.on("userVoted", $.proxy(this.handleUserVote, this));
+    },
+
+    adjustTableHeight: function () {
+      this.playingTable.height($(window).height() - $("#hand").height() - 72);
     }
-  }
+  };
 
-  function handleJoinRoom(data) {
-    var roomInfo = data.room;
-    room = new Room(roomInfo, data.user);
+  (function init() {
 
-    $('#nameModal').modal('hide');
-
-    if (!URLRoomId) {
-      window.location = "#/view/" + roomInfo.id;
-    }
-
-    for (var f = 0 ; f < roomInfo.users.length; f++) {
-      room.addUser(roomInfo.users[f]);
-    }
-
-    socket.on("userJoined", $.proxy(room.addUser, room));
-    socket.on("userLeft", $.proxy(room.removeUser, room));
-  }
-
-  function adjustTableHeight(){
-    $("#table").height($(window).height() - $("#hand").height() - 72);
-  }
-
-  (function init(argument) {
+    room = new Room();
 
     // attempt to extract room id from URL hash
     var match = window.location.hash.match(/^#\/view\/(\d+)$/);
@@ -86,22 +104,19 @@ var room;
     }
 
     // create the modal
-    // $('#nameModal').modal({backdrop: 'static'});
+    $('#nameModal').modal({backdrop: 'static'});
 
     // handle join modal submission
-    // $("#joinRoomForm").submit(function () {
-      // playerName = $("#joinRoomForm #name").val();
-      playerName = "Nicu";
+    $("#joinRoomForm").submit(function () {
+      playerName = $("#joinRoomForm #name").val();
+      // playerName = "Nicu";
 
-      socket.on("roomJoined", handleJoinRoom);
-
+      socket.on("roomJoined", $.proxy(room.join, room));
       socket.emit("joinRoom", {roomId: URLRoomId, name: playerName});
 
-    //   return false;
-    // });
+      return false;
+    });
 
-    $(window).resize(adjustTableHeight);
-    adjustTableHeight();
   })();
 
 })();

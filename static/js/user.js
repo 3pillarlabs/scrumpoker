@@ -41,6 +41,9 @@ User.prototype = {
 
 	castVote: function () {
 		var value = $(this).data("value");
+		var currentCard = room.currentPlayer.getDOM().find(".card");
+		currentCard.removeClass("hidden").addClass("turned");
+		currentCard.find(".value").html(value);
 		socket.emit("vote", {voteValue: value});
 	}
 }
