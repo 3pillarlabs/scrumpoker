@@ -23,8 +23,11 @@ var room;
   }
 
   Room.prototype = {
-    addUser: function (userJoiningInfo) {
-      var user = new User(userJoiningInfo);
+    addUser: function (user) {
+      if (!(user instanceof User)) {
+        user = new User(user);
+      }
+
       this.users.push(user)
       this.playingTable.append(user.getDOM());
     },
@@ -65,10 +68,15 @@ var room;
       votingUser.getDOM().find(".card").removeClass("hidden");
     },
 
+    handleVoteFinished: function (votes) {
+      console.log("Votes:", votes);
+    },
+
     join: function (data) {
 
       this.currentPlayer = new User(data.user);
       this.currentPlayer.isCurrentPlayer = true;
+
       this.renderHand();
 
       var roomInfo = data.room;
@@ -80,12 +88,17 @@ var room;
       }
 
       for (var f = 0 ; f < roomInfo.users.length; f++) {
-        this.addUser(roomInfo.users[f]);
+        if (roomInfo.users[f].id !== this.currentPlayer.id) {
+          this.addUser(new User(roomInfo.users[f]));
+        }
+        else {
+          this.addUser(this.currentPlayer);        }
       }
 
       socket.on("userJoined", $.proxy(this.addUser, this));
       socket.on("userLeft", $.proxy(this.removeUser, this));
       socket.on("userVoted", $.proxy(this.handleUserVote, this));
+      socket.on("voteFinished", $.proxy(this.handleVoteFinished, this));
     },
 
     adjustTableHeight: function () {

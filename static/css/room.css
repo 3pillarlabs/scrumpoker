@@ -5,6 +5,7 @@
   border-radius: 5px;
   overflow: hidden;
   cursor: default;
+
 }
 
   .card .front
@@ -60,6 +61,7 @@
   background: linear-gradient(to bottom, #046337 0%,#183B25 100%);
 
   color: #D7FFF5;
+  position: relative;
 }
 
 #table::after
@@ -68,6 +70,13 @@
   clear: both;
   display: block;
 }
+
+  #table #finishVoting
+  {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+  }
 
   #table .player
   {
@@ -82,7 +91,7 @@
       border-radius: 5px;
       width: 75px;
       height: 102px;
-    }
+}
 
       .cardHolder .card
       {

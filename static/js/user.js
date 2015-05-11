@@ -42,8 +42,14 @@ User.prototype = {
 	castVote: function () {
 		var value = $(this).data("value");
 		var currentCard = room.currentPlayer.getDOM().find(".card");
+		socket.emit("vote", {voteValue: value});
+
+
+		if (value == "coffee") {
+			value = "<i class='fa fa-coffee'></i>";
+		}
+
 		currentCard.removeClass("hidden").addClass("turned");
 		currentCard.find(".value").html(value);
-		socket.emit("vote", {voteValue: value});
 	}
 }

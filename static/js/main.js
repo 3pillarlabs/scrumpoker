@@ -2,5 +2,5 @@
   'use strict';
 
   window.nj = nunjucks;
-  nj.configure("/static/views");
+  nj.configure("/static/partials");
 })();

@@ -2,6 +2,7 @@ var plug = require("../plug");
 var _ = require("underscore");
 
 var rooms = [];
+var votes = {};
 var lastRoom = 0;
 
 function Room(id) {
@@ -20,6 +21,10 @@ function Room(id) {
 Room.prototype = {
   getUniqId: function () {
     return "" + lastRoom++;
+  },
+
+  finishVoting: function () {
+    io.sockets.in(this.id).emit('voteFinished', votes[this.id]);
   }
 }
 
@@ -48,6 +53,7 @@ plug.whenPlugged(function (socket) {
       room =  new Room();
     }
 
+    votes[room.id] = {};
     rooms.push(room);
     socket.join(room.id);
 
@@ -72,9 +78,22 @@ plug.whenPlugged(function (socket) {
     var voter = socket.pokerInfo.user;
     var voteValue = data.voteValue;
 
+    votes[room.id][voter.id] = voteValue;
+
     socket.broadcast.to(room.id).emit('userVoted', voter);
 
-    console.log("Received vote:",voter, voteValue);
+    var allVoted = true;
+
+    for (var user in room.users) {
+      if (votes[room.id][user.id] === undefined) {
+        allVoted = false;
+        break;
+      }
+    }
+
+    if (allVoted) {
+      room.finishVoting();
+    }
   });
 
   socket.on("disconnect", function (data) {
