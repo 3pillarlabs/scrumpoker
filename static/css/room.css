@@ -80,29 +80,62 @@
 
   #table .player
   {
+    cursor: default;
     float: left;
     margin: 10px;
     text-align: center;
   }
 
+    .player .playerName {
+      font-size: 18px;
+      opacity: .8;
+    }
+
+    .player#currentPlayer .playerName {
+      font-weight: 700;
+      color: #fff;
+      opacity: 1;
+    }
+
     .player .cardHolder
     {
       border: 2px solid #D7FFF5;
       border-radius: 5px;
-      width: 75px;
-      height: 102px;
+      width: 112px;
+      height: 152px;
 }
 
       .cardHolder .card
       {
         margin-left: -1px;
         margin-top: -1px;
+        width: 110px;
+        height: 150px;
       }
 
         .cardHolder .card .front
         {
           display: none;
         }
+
+          .cardHolder .card .front .center {
+            font-size: 42px;
+            margin-top: 42px;
+          }
+
+          .cardHolder .card .front .topRight {
+            font-size: 22px;
+            line-height: 22px;
+            top: 5px;
+            right: 5px;
+          }
+
+          .cardHolder .card .front .bottomLeft {
+            font-size: 22px;
+            line-height: 22px;
+            bottom: 5px;
+            left: 5px;
+          }
 
         .cardHolder .card.turned .front
         {
@@ -112,6 +145,10 @@
 #hand
 {
   margin-top: 10px;
+}
+
+#hand.disabled {
+  opacity: .3;
 }
 
 #hand::after

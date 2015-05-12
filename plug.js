@@ -9,7 +9,7 @@ module.exports = {
 
     io.on("connection", function (_socket) {
       for (var f = 0; f < plugCallbacks.length; f++) {
-        plugCallbacks[f].call(this, _socket);
+        plugCallbacks[f].call(this, _socket, io);
       }
 
       socket = _socket;
@@ -22,7 +22,7 @@ module.exports = {
         plugCallbacks.push(callback);
       }
       else {
-        callback.call(this, socket);
+        callback.call(this, socket, io);
       }
     }
     else {

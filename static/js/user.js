@@ -22,6 +22,7 @@ function User(userInfo) {
 	this.dom = null;
 	this.vote = null;
 	this.isCurrentPlayer = false;
+	this.isScrumMaster = userInfo.isScrumMaster;
 }
 
 User.prototype = {
@@ -29,7 +30,8 @@ User.prototype = {
 		if (!this.dom) {
 			this.dom = $(nj.render("player.html", {
 				name: this.name,
-				state: getCardState(this.vote)
+				state: getCardState(this.vote),
+				isScrumMaster: this.isScrumMaster
 			}));
 
 			if (this.isCurrentPlayer) {

@@ -1,8 +1,11 @@
-<div class="player">
+<div class="player noSelect">
   <div class="cardHolder">
     {% include "card.html" %}
   </div>
   <div class="playerName">
+    {% if isScrumMaster%}
+    <i class="fa fa-user-secret" title="Scrum Master"></i>
+    {% endif %}
     {{name}}
   </div>
 </div>

@@ -15,6 +15,7 @@ var room;
 
     this.hand = $("#hand");
     this.playingTable =  $("#table");
+    this.finishVotingBtn = $("#finishVoting");
 
     $(window).resize($.proxy(this.adjustTableHeight, this));
     this.adjustTableHeight();
@@ -27,7 +28,7 @@ var room;
       if (!(user instanceof User)) {
         user = new User(user);
       }
-
+      console.log(user);
       this.users.push(user)
       this.playingTable.append(user.getDOM());
     },
@@ -69,7 +70,22 @@ var room;
     },
 
     handleVoteFinished: function (votes) {
-      console.log("Votes:", votes);
+
+      this.hand.addClass("disabled");
+
+      for (var userId in votes) {
+        var user = _.find(this.users, function (userItem) {
+          return userItem.id == userId
+        });
+
+        var value = votes[userId];
+
+        if (value === "coffee") {
+          value = "<i class='fa fa-coffee'></i>";
+        }
+
+        user.getDOM().find(".card").addClass("turned").find(".value").html(value);
+      }
     },
 
     join: function (data) {
@@ -99,6 +115,10 @@ var room;
       socket.on("userLeft", $.proxy(this.removeUser, this));
       socket.on("userVoted", $.proxy(this.handleUserVote, this));
       socket.on("voteFinished", $.proxy(this.handleVoteFinished, this));
+
+      if (this.currentPlayer.isScrumMaster) {
+        this.finishVotingBtn.removeClass("hidden");
+      }
     },
 
     adjustTableHeight: function () {
@@ -111,7 +131,7 @@ var room;
     room = new Room();
 
     // attempt to extract room id from URL hash
-    var match = window.location.hash.match(/^#\/view\/(\d+)$/);
+    var match = window.location.hash.match(/^#\/view\/(.+)$/);
     if (match) {
       URLRoomId = match[1];
     }

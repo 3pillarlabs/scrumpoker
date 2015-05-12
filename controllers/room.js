@@ -1,5 +1,6 @@
 var plug = require("../plug");
 var _ = require("underscore");
+var io;
 
 var rooms = [];
 var votes = {};
@@ -31,9 +32,12 @@ Room.prototype = {
 function User(name, id) {
   this.name = name;
   this.id = id;
+  this.isScrumMaster = false;
 }
 
-plug.whenPlugged(function (socket) {
+plug.whenPlugged(function (socket, _io) {
+
+  io = _io;
 
   socket.on("joinRoom", function (data) {
     var room;
@@ -58,6 +62,9 @@ plug.whenPlugged(function (socket) {
     socket.join(room.id);
 
     var user = new User(data.name, room.users.length);
+    if (room.users.length === 0) {
+      user.isScrumMaster = true;
+    }
     room.users.push(user);
 
     socket.pokerInfo = {
@@ -84,7 +91,9 @@ plug.whenPlugged(function (socket) {
 
     var allVoted = true;
 
-    for (var user in room.users) {
+    for (var f = 0; f < room.users.length; f++) {
+      var user = room.users[f];
+
       if (votes[room.id][user.id] === undefined) {
         allVoted = false;
         break;
