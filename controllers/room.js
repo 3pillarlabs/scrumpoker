@@ -9,6 +9,7 @@ var lastRoom = 0;
 function Room(id) {
   this.users = [];
   this.topic = null;
+  this.isVotingFinished = false;
 
   if (!id) {
     this.id = this.getUniqId();
@@ -25,7 +26,20 @@ Room.prototype = {
   },
 
   finishVoting: function () {
+    this.isVotingFinished = true;
     io.sockets.in(this.id).emit('voteFinished', votes[this.id]);
+  },
+
+  restartVoting: function () {
+    if (!this.isVotingFinished) {
+      console.error("Vote has to finish before it can restart");
+      return;
+    }
+
+    this.isVotingFinished = false;
+    votes[this.id] = {};
+
+    io.sockets.in(this.id).emit('voteRestarted');
   }
 }
 
@@ -82,6 +96,12 @@ plug.whenPlugged(function (socket, _io) {
 
   socket.on("vote", function (data) {
     var room = socket.pokerInfo.room;
+
+    if (room.isVotingFinished) {
+      console.error("Voting is finished. Better luck next time.");
+      return;
+    }
+
     var voter = socket.pokerInfo.user;
     var voteValue = data.voteValue;
 
@@ -105,20 +125,52 @@ plug.whenPlugged(function (socket, _io) {
     }
   });
 
-  socket.on("disconnect", function (data) {
-    if (socket.pokerInfo) {
-      var user = socket.pokerInfo.user;
-      var room = socket.pokerInfo.room;
+  socket.on("finishVoting", function () {
+    var user = socket.pokerInfo.user;
+    var room = socket.pokerInfo.room;
+    var scrumMaster = _.find(room.users, function (userItem) {
+      return userItem.isScrumMaster === true;
+    });
 
-      //TODO: make this more efficient
-      room.users = _.filter(room.users, function (item) {
-        return item !== user;
-      });
-
-      socket.broadcast.to(room.id).emit('userLeft', user);
+    if (user.id !== scrumMaster.id) {
+      console.error("You're not a scrum master nor cool, so you can't finish the voting");
+      return;
     }
+
+    room.finishVoting();
   });
 
+  socket.on("restartVoting", function () {
+    var room = socket.pokerInfo.room;
+    var user = socket.pokerInfo.user;
+    var scrumMaster = _.find(room.users, function (userItem) {
+      return userItem.isScrumMaster === true;
+    });
+
+    if (!room.isVotingFinished) {
+      console.error("You can't restart what didn't end");
+      return;
+    }
+
+    if (user.id !== scrumMaster.id) {
+      console.error("You're not a scrum master nor cool, so you can't restart the voting");
+      return;
+    }
+
+    room.restartVoting();
+  });
+
+  socket.on("disconnect", function (data) {
+    var user = socket.pokerInfo.user;
+    var room = socket.pokerInfo.room;
+
+    //TODO: make this more efficient
+    room.users = _.filter(room.users, function (item) {
+      return item !== user;
+    });
+
+    socket.broadcast.to(room.id).emit('userLeft', user);
+  });
 });
 
 module.exports = {};

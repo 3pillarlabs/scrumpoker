@@ -71,7 +71,8 @@
   display: block;
 }
 
-  #table #finishVoting
+  #table #finishVoting,
+  #table #restartVoting
   {
     position: absolute;
     bottom: 10px;

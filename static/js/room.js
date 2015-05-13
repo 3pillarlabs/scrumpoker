@@ -16,6 +16,13 @@ var room;
     this.hand = $("#hand");
     this.playingTable =  $("#table");
     this.finishVotingBtn = $("#finishVoting");
+    this.finishVotingBtn.click(function () {
+      socket.emit("finishVoting");
+    });
+    this.restartVotingBtn = $("#restartVoting");
+    this.restartVotingBtn.click(function () {
+      socket.emit("restartVoting");
+    })
 
     $(window).resize($.proxy(this.adjustTableHeight, this));
     this.adjustTableHeight();
@@ -28,7 +35,7 @@ var room;
       if (!(user instanceof User)) {
         user = new User(user);
       }
-      console.log(user);
+
       this.users.push(user)
       this.playingTable.append(user.getDOM());
     },
@@ -73,6 +80,11 @@ var room;
 
       this.hand.addClass("disabled");
 
+      if (this.currentPlayer.isScrumMaster) {
+        this.finishVotingBtn.addClass("hidden");
+        this.restartVotingBtn.removeClass("hidden");
+      }
+
       for (var userId in votes) {
         var user = _.find(this.users, function (userItem) {
           return userItem.id == userId
@@ -86,6 +98,17 @@ var room;
 
         user.getDOM().find(".card").addClass("turned").find(".value").html(value);
       }
+    },
+
+    handleVoteRestarted: function () {
+      this.hand.removeClass("disabled");
+
+      if (this.currentPlayer.isScrumMaster) {
+        this.finishVotingBtn.removeClass("hidden");
+        this.restartVotingBtn.addClass("hidden");        
+      }
+
+      this.playingTable.find(".card").removeClass("turned").addClass("hidden").find(".value").html("");
     },
 
     join: function (data) {
@@ -115,6 +138,7 @@ var room;
       socket.on("userLeft", $.proxy(this.removeUser, this));
       socket.on("userVoted", $.proxy(this.handleUserVote, this));
       socket.on("voteFinished", $.proxy(this.handleVoteFinished, this));
+      socket.on("voteRestarted", $.proxy(this.handleVoteRestarted, this));
 
       if (this.currentPlayer.isScrumMaster) {
         this.finishVotingBtn.removeClass("hidden");
