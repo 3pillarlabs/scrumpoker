@@ -1,0 +1,12 @@
+<div class="card noSelect {{state}}">
+  {% if cardValue == "coffee" %}
+    {% set cardValue = "<i class='fa fa-coffee'></i>" %}
+  {% endif %}
+  <div class="front">
+    <div class="topRight value">{{cardValue}}</div>
+    <div class="center value">{{cardValue}}</div>
+    <div class="bottomLeft value">{{cardValue}}</div>
+  </div>
+  <div class="back">
+  </div>
+</div>
