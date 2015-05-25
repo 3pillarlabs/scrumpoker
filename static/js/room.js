@@ -105,7 +105,7 @@ var room;
 
       if (this.currentPlayer.isScrumMaster) {
         this.finishVotingBtn.removeClass("hidden");
-        this.restartVotingBtn.addClass("hidden");        
+        this.restartVotingBtn.addClass("hidden");
       }
 
       this.playingTable.find(".card").removeClass("turned").addClass("hidden").find(".value").html("");
