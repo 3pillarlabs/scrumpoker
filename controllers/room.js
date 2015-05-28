@@ -31,11 +31,6 @@ Room.prototype = {
   },
 
   restartVoting: function () {
-    if (!this.isVotingFinished) {
-      console.error("Vote has to finish before it can restart");
-      return;
-    }
-
     this.isVotingFinished = false;
     votes[this.id] = {};
 
@@ -161,15 +156,17 @@ plug.whenPlugged(function (socket, _io) {
   });
 
   socket.on("disconnect", function (data) {
-    var user = socket.pokerInfo.user;
-    var room = socket.pokerInfo.room;
+    if (socket.pokerInfo) {
+      var user = socket.pokerInfo.user;
+      var room = socket.pokerInfo.room;
 
-    //TODO: make this more efficient
-    room.users = _.filter(room.users, function (item) {
-      return item !== user;
-    });
+      //TODO: make this more efficient
+      room.users = _.filter(room.users, function (item) {
+        return item !== user;
+      });
 
-    socket.broadcast.to(room.id).emit('userLeft', user);
+      socket.broadcast.to(room.id).emit('userLeft', user);      
+    }
   });
 });
 
