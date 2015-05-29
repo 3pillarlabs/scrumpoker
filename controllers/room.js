@@ -165,7 +165,9 @@ plug.whenPlugged(function (socket, _io) {
         return item !== user;
       });
 
-      socket.broadcast.to(room.id).emit('userLeft', user);      
+      delete votes[room.id][user.id];
+
+      socket.broadcast.to(room.id).emit('userLeft', user);
     }
   });
 });
